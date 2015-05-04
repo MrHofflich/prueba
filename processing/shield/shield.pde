@@ -86,7 +86,7 @@ void setup() {
   
 
   println(Serial.list());
-  serialPort = new Serial(this, "COM5", 9600);
+  serialPort = new Serial(this, "/dev/cu.usbmodem1421", 9600);
   logPracticaAlejandro = loadTable("logPracticaAlejandro.csv", "header");
   
   IronMan = new arcR(xEntrenamiento +anchoIronMan/2, yEntrenamiento, anchoIronMan);
