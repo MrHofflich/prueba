@@ -1,4 +1,4 @@
-public class Button {
+class Button {
   private String strShield = "S.H.I.E.L.D.";
   private PFont objKelsonFont;
   private PShape objLogo;
@@ -52,14 +52,8 @@ public class Button {
     this.height = this.height + 2;
 
     if (dist(this.xcoord, this.ycoord, mouseX, mouseY) <= this.width / 2 && mousePressed) {
-      menu = true;
-      crearAgente   = false;
-      verAgente     = false;
-      practica      = false;
-      entrenamiento = false;
-      estadisticas  = false;
-
-      serialPort.write(sentData);
+      numState = STATE_MENU;
+      // serialPort.write(sentData);
     }
   }
 }
