@@ -6,12 +6,15 @@ int xValue;
 int x,r;
 PImage arc;
 float gravedad = 0.1;
+int yEntrenamiento, altoEntrenamiento;
 
-  arcR (int x_, float altura_, int r_ ) {
+  arcR (int x_, float altura_, int r_ , int yEntrenamiento, int altoEntrenamiento) {
     x = x_;
     altura = altura_;
     r = r_;
     arc = loadImage("image10.png");
+    this.yEntrenamiento = yEntrenamiento;
+    this.altoEntrenamiento = altoEntrenamiento;
   }
 
   void display() {
@@ -28,12 +31,12 @@ float gravedad = 0.1;
     altura = altura + velY/5;
     velY = velY + gravedad;
 
-   if(altura <= yEntrenamiento +r/2) {
-     altura =  yEntrenamiento;
+   if(altura <= this.yEntrenamiento +r/2) {
+     altura =  this.yEntrenamiento;
      velY = 10;
    }
-   if(altura >= yEntrenamiento +altoEntrenamiento) {
-     altura = altoEntrenamiento -r;
+   if(altura >= this.yEntrenamiento +this.altoEntrenamiento) {
+     altura = this.altoEntrenamiento -r;
      velY = 10;
    }
 
@@ -72,5 +75,8 @@ float gravedad = 0.1;
 
   }
 
-
+  void setAltura(int altura) {
+    this.altura = (int) map(altura, 0, 1023, this.yEntrenamiento, this.yEntrenamiento + this.altoEntrenamiento);
+    println("Esta es la altura nueva: " + this.altura);
+  }
 }

@@ -52,7 +52,7 @@ class Button {
     this.height = this.height + 2;
 
     if (dist(this.xcoord, this.ycoord, mouseX, mouseY) <= this.width / 2 && mousePressed) {
-      numState = STATE_MENU;
+      numState = Screen.SCREEN_MENU;
       // serialPort.write(sentData);
     }
   }

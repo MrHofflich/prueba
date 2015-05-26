@@ -4,6 +4,11 @@ class MenuItem {
     private int    _numState;
     private int    _numIndex;
 
+    private int _numXCoord;
+    private int _numYCoord;
+
+    private boolean _blnPressed = false;
+
     final private int _numWidth     = 790;
     final private int _numHeight    = 60;
     final private int _numVariation = 40;
@@ -26,33 +31,48 @@ class MenuItem {
         this._objMenuItem.vertex(this._numWidth - this._numVariation, this._numHeight);
         this._objMenuItem.vertex(-this._numVariation, this._numHeight);
         this._objMenuItem.endShape();
+
+        this._numXCoord = width / 4;
+        this._numYCoord = (height / 4) + (this._numSeparationRatio * this._numIndex);
     }
 
     public void display() {
-        int xcoord = width / 4;
-        int ycoord = (height / 4) + (this._numSeparationRatio * this._numIndex);
-
-        shape(this._objMenuItem, xcoord, ycoord);
+        shape(this._objMenuItem, this._numXCoord, this._numYCoord);
         fill(0);
         textSize(this._numFontSize);
         text(
             this._strMessage,
-            xcoord + (this._numWidth - textWidth(this._strMessage)) / 2,
-            ycoord + this._numHeight / 2 + 10
+            this._numXCoord + (this._numWidth - textWidth(this._strMessage)) / 2,
+            this._numYCoord + this._numHeight / 2 + 10
         );
 
-        if (mouseX >= xcoord && mouseX <= xcoord + this._numWidth && mouseY >= ycoord && mouseY <= ycoord + this._numHeight) {
-            shape(this._objMenuItem, xcoord, ycoord);
+        if (this.isOver()) {
+            shape(this._objMenuItem, this._numXCoord, this._numYCoord);
             fill(0);
             textSize(this._numFontSize);
             text(
                 this._strMessage,
-                xcoord + (this._numWidth - textWidth(this._strMessage)) / 2,
-                ycoord + this._numHeight / 2 + 10
+                this._numXCoord + (this._numWidth - textWidth(this._strMessage)) / 2,
+                this._numYCoord + this._numHeight / 2 + 10
             );
             if(mousePressed) {
-                numState = this._numState;
+                if (!this._blnPressed) {
+                    this._blnPressed = true;
+                    numState = this._numState;
+                }
             }
+        } else {
+            this._blnPressed = false;
         }
+    }
+
+    protected boolean isOver() {
+        if (mouseX >= this._numXCoord
+                && mouseX <= this._numXCoord + this._numWidth
+                && mouseY >= this._numYCoord
+                && mouseY <= this._numYCoord + this._numHeight) {
+            return true;
+        }
+        return false;
     }
 }

@@ -5,14 +5,19 @@ class objeto {
   float r; // Radius of the drop
   float totalTime = 5000;
   PImage arcreactor;
+  int xEntrenamiento, yEntrenamiento, altoEntrenamiento, anchoEntrenamiento;
 
-  objeto () {  //Constructor of drops
+  objeto (int xEntrenamiento, int yEntrenamiento, int altoEntrenamiento, int anchoEntrenamiento) {  //Constructor of drops
 
     r = 10;  //todas las gotas son del mismo tamanio
     xArcReactor = xEntrenamiento+anchoEntrenamiento; //empieza un poco mas afuera de la pantalla
     yArcReactor = random(yEntrenamiento,yEntrenamiento+ altoEntrenamiento);   //empieza randommente en el eje Y
     velocidad = random(1, 15);
     arcreactor = loadImage("arc reactor2.png");
+    this.xEntrenamiento = xEntrenamiento;
+    this.yEntrenamiento = yEntrenamiento;
+    this.altoEntrenamiento = altoEntrenamiento;
+    this.anchoEntrenamiento = anchoEntrenamiento;
   }
 
   //Move raindrop down
@@ -20,7 +25,7 @@ class objeto {
   void move() {
     xArcReactor -= velocidad ;
 
-        if ( xArcReactor < xEntrenamiento  ) {
+        if ( xArcReactor < this.xEntrenamiento  ) {
       xArcReactor = -1000;
 
     }
@@ -40,8 +45,5 @@ class objeto {
   void caught() {
     velocidad= 0;
     xArcReactor = -1000 ;
-    totaldropcaught++;
-
   }
-
 }

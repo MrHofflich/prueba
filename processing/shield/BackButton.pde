@@ -31,7 +31,7 @@ class BackButton {
             textSize(this._numFontSize);
             text(this._strTitle, width - 370, height - 150);
             if(mousePressed) {
-                numState = STATE_MENU;
+                numState = Screen.SCREEN_MENU;
             }
         }
     }
