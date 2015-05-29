@@ -1,15 +1,16 @@
 import java.util.Map;
-import java.util.HashMap;
 
 class Arduino {
-    private shield _objClass;
-    private Serial  _objPort;
+    private Shield _objClass;
+    private Serial _objPort;
 
     private boolean _blnPortAvailable  = false;
 
     private ArrayList<String> _objListOfPorts;
 
     private String _strCurrentPort;
+
+    private MessageHandler _objMessageHandler;
 
     //=====[ PROTOCOL ]=======================
     public static final char PROTOCOL_START_SEQUENCE = '~';
@@ -42,14 +43,17 @@ class Arduino {
 
     Map<String, String> _strMessages = new HashMap<String, String>();
 
-    public Arduino(shield objClass) {
+    public Arduino(Shield objClass) {
         this._objClass = objClass;
         this._objListOfPorts = new ArrayList<String>();
+        this._objMessageHandler = new MessageHandler();
+
         // for (String strPort : Serial.list()) {
         //     this._objListOfPorts.add(strPort);
         // }
         this._objListOfPorts.add("/dev/cu.usbmodem1d11411");
-        this._objListOfPorts.add("/dev/cu.usbmodem1d1111");
+        // this._objListOfPorts.add("/dev/cu.usbmodem1d1111");
+        // this._objListOfPorts.add("/dev/cu.usbmodem1d11311");
         println(Serial.list());
     }
 
@@ -73,7 +77,7 @@ class Arduino {
                     this.sendHeloMessage();
                     _numTimerConnection = millis();
                 } catch (Exception e) {
-                    // e.printStackTrace();
+                    e.printStackTrace();
                     this._blnPortAvailable  = false;
                     this._objListOfPorts.remove(i);
                 }
@@ -147,17 +151,36 @@ class Arduino {
      *
      * @return void
      */
+    // public void requestSensorValue(int numSensor) {
+    //     if (millis() - _numTimerPractice >= TIMEOUT_PRACTICE) {
+    //         String strCurrentValue = this._strMessages.get("S" + numSensor);
+    //         if (strCurrentValue != null) {
+    //             this._strMessages.put("S" + numSensor, strCurrentValue);
+    //         } else {
+    //             this._strMessages.put("S" + numSensor, "00");
+    //         }
+    //         String strMessage = this.pkg('R', 0, "S" + numSensor, "00");
+    //         println(strMessage);
+    //         this.write(strMessage);
+    //         _numTimerPractice = millis();
+    //     }
+    // }
     public void requestSensorValue(int numSensor) {
         if (millis() - _numTimerPractice >= TIMEOUT_PRACTICE) {
-            String strCurrentValue = this._strMessages.get("S" + numSensor);
-            if (strCurrentValue != null) {
-                this._strMessages.put("S" + numSensor, strCurrentValue);
-            } else {
-                this._strMessages.put("S" + numSensor, "00");
-            }
             String strMessage = this.pkg('R', 0, "S" + numSensor, "00");
-            println(strMessage);
-            this.write(strMessage);
+            Message objMessage = this._objMessageHandler.get(strMessage);
+            if (objMessage == null) {
+                objMessage = new Message.MessageBuilder(strMessage)
+                    .type("R")
+                    .index(0)
+                    .element("S" + numSensor)
+                    .build();
+            }
+            if (!objMessage.inQueue()) {
+                objMessage.setInQueue(true);
+                this._objMessageHandler.put(objMessage);
+                this.write(strMessage);
+            }
             _numTimerPractice = millis();
         }
     }

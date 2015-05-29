@@ -83,7 +83,12 @@ class ScreenPractice extends Screen {
             // row.setInt("Valor de Sensor", encender);
 
             this._objArduino.requestSensorValue(1);
-            this._numSensorValue = int(this._objArduino.readSensorValue(1));
+
+            try {
+                this._numSensorValue = int(this._objArduino.readSensorValue(1));
+            } catch (Exception e) {
+                this._numSensorValue = 0;
+            }
 
             if (this._numSensorValue  >= this._numThreashold) {
                 fill(0,190,180,260);

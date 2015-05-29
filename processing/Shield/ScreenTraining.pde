@@ -1,6 +1,7 @@
 class ScreenTraining extends Screen {
     private objeto[]  _objReactor;
-    private arcR      IronMan;
+    // private arcR      IronMan;
+    private Character _objCharacter;
 
     private boolean _blnRun;
 
@@ -31,12 +32,20 @@ class ScreenTraining extends Screen {
         super(strTitle);
         // logPracticaAlejandro = loadTable("logPracticaAlejandro.csv", "header");
 
-        this.IronMan = new arcR(
-            this._numXTraining + this._numIronManWidth / 2,
+        // this.IronMan = new arcR(
+        //     this._numXTraining + this._numIronManWidth / 2,
+        //     this._numYTraining,
+        //     this._numIronManWidth,
+        //     this._numYTraining,
+        //     this._numHeightTraining
+        // );
+
+        this._objCharacter = new Character("image10.png", this._numIronManWidth);
+        this._objCharacter.setLimits(
+            this._numXTraining,
             this._numYTraining,
-            this._numIronManWidth,
-            this._numYTraining,
-            this._numHeightTraining
+            this._numXTraining + this._numWidthTraining,
+            this._numYTraining + this._numHeightTraining
         );
 
         this._objReactor    = new objeto[50];
@@ -53,12 +62,17 @@ class ScreenTraining extends Screen {
 
             image(this._objBackground, this._numXTraining, this._numYTraining, this._numWidthTraining, this._numHeightTraining);
 
-            this.IronMan.display();
-            this.IronMan.update();
+            this._objCharacter.display();
+            this._objCharacter.update();
+
+            // this.IronMan.display();
+            // this.IronMan.update();
 
             this._objArduino.requestSensorValue(1);
             this._numSensorValue = int(this._objArduino.readSensorValue(1));
-            this.IronMan.setAltura(this._numSensorValue);
+
+            // this.IronMan.setAltura(this._numSensorValue);
+            this._objCharacter.setYPosition(this._numSensorValue);
 
             // TableRow row = logPracticaAlejandro.addRow();
             // row.setString("Fecha", dia +"/" + mes +"/" + year);
@@ -86,7 +100,11 @@ class ScreenTraining extends Screen {
             for (int i= 0 ; i < this._numTotalDrops ; i++) {
                 this._objReactor[i].move();
                 this._objReactor[i].display();
-                if (this.IronMan.intersect(this._objReactor[i])) {
+                // if (this.IronMan.intersect(this._objReactor[i])) {
+                //     this._objReactor[i].caught();
+                //     this._numTotalDropCaught++;
+                // }
+                if (this._objCharacter.intersect(this._objReactor[i])) {
                     this._objReactor[i].caught();
                     this._numTotalDropCaught++;
                 }

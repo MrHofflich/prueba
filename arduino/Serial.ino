@@ -72,7 +72,7 @@ void serialEvent() {
     int numBytes = serialParser();
 
     if (numBytes  > 0) {
-        Serial.println(objPackage.getEcho());
+        sendEcho();
 
         // We have a valid message
         if (String(objPackage.getHeader()).equals("~H")) {
@@ -111,6 +111,21 @@ void sendSensorMessage(int numSensor, int numValue) {
     Serial.println(); // send cr/lf
 }
 
+void sendEcho() {
+    Serial.print(PROTOCOL_START_SEQUENCE);
+    Serial.print(PROTOCOL_START_ECHO);
+    Serial.print(PROTOCOL_SEPARATOR);
+    Serial.print(objPackage.getType());
+    Serial.print(PROTOCOL_SEPARATOR);
+    Serial.print(objPackage.getIndex());
+    Serial.print(PROTOCOL_SEPARATOR);
+    Serial.print(objPackage.getElement());
+    Serial.print(PROTOCOL_SEPARATOR);
+    Serial.print(objPackage.getValue());
+    Serial.print(PROTOCOL_SEPARATOR);
+    Serial.println(); // send cr/lf
+}
+
 int serialParser() {
     int numByteCount = 0;
     numByteCount =  Serial.readBytesUntil('\n', charBuffer, PROTOCOL_MESSAGE_LENGTH);
@@ -119,7 +134,7 @@ int serialParser() {
         Serial.println(numByteCount);
     }
     if (numByteCount  == PROTOCOL_MESSAGE_LENGTH) {
-        objPackage.setBuffer(charBuffer, PROTOCOL_MESSAGE_LENGTH);
+        objPackage.setBuffer(charBuffer);
     }
     memset(charBuffer, 0, sizeof(charBuffer));
     Serial.flush();
